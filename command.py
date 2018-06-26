@@ -11,6 +11,8 @@ from helpers import *
 # Caches
 shouldis = {}
 updatedshouldi = {}
+choices = {}
+updatedchoices = {}
 
 async def handle_hello(client, message, command, sudo):
     if(0 != len(command['args'])):
@@ -58,8 +60,18 @@ async def handle_choose(client, message, command, sudo):
     if(len(command['args']) < 2):
         await form_message(client, message, strings.PARAM_MSG)
         return
+    now_date = datetime.datetime.now()
+    already = True
+    query = ' '.join(sorted(command['args'])).lower()
+    if(query not in choices or (now_date - updatedchoices[query] > datetime.timedelta(minutes=constants.SHOULDI_CACHE_REFRESH))):
+        choices[query] = command['args'][random.randint(0,len(command['args'])-1)]
+        updatedchoices[query] = now_date
+        already = False
 
-    await form_message(client, message, strings.CHOOSE_MSG % command['args'][random.randint(0,len(command['args'])-1)])
+    if(already):
+        await form_message(client, message, strings.CHOOSE_REPEAT_MSG % choices[query])
+    else:
+        await form_message(client, message, strings.CHOOSE_MSG % choices[query])
     return
 
 async def handle_should(client, message, command, sudo):

@@ -22,12 +22,13 @@ ANIME_ID = secrets.ANIME_ID
 ANIME_SECRET = secrets.ANIME_SECRET
 OSU_TOKEN = secrets.OSU_TOKEN
 
+#Objects
 client = discord.Client()
 anime_list = Kitsu(ANIME_ID, ANIME_SECRET)
 watcher = RiotWatcher(RIOT_TOKEN)
-
 blacklist = []
 
+# Called whenever a message is posted into a Discord channel.
 @client.event
 async def on_message(message):
 
@@ -38,7 +39,9 @@ async def on_message(message):
     if message.channel.is_private:
         return
 
+    #Check if the sender has admin authority.
     sudo = message.channel.server.owner.id == message.author.id
+
 
     command = parse_args(message.content)
 
@@ -46,16 +49,14 @@ async def on_message(message):
     if(not command['iscommand']):
         return
 
-    #Ignore statements that are not commands.
     if(command['isinvalid']):
         await form_message(client, message, strings.QUOTE_ERROR_MSG)
         return
 
-    # we do not want the bot to reply to itself
     if message.author == client.user:
         return
 
-    ### ADMINISTRATIVE COMMANDS
+    ### ADMINISTRATIVE COMMANDS: Can be used in any channel regardless of blacklist.
     if command['command'].lower() == 'blacklist':
         await admin.handle_blacklist(client, message, command, sudo, blacklist)
         return
@@ -83,7 +84,7 @@ async def on_message(message):
 
     if command['command'].lower() in ['bye', 'goodbye', 'ban']:
         await user.handle_bye(client, message, command, sudo)
-        return
+        return 
 
     # Roll a number between 0 and a number.
     if command['command'].lower() in ['roll', 'r']:
@@ -96,7 +97,7 @@ async def on_message(message):
         return
 
     # Pings the bot to see if it's online.
-    if command['command'].lower() in ['should', 'shouldi', 'shouldwe', 's']:
+    if command['command'].lower() in ['should', 'shouldi', 'shouldwe']:
         await user.handle_should(client, message, command, sudo)
         return
 
@@ -127,18 +128,18 @@ async def on_message(message):
 
 @client.event
 async def on_ready():
-    print('Logged in as')
-    print(client.user.name)
-    print(client.user.id)
-    print('------')
+    debug('[SERVER] Logged in!', '')
 
 #Load blacklist
-print('[SERVER] Loading blacklist')
-wl = open('blacklist.txt', 'r')
-lines = wl.readlines()
-for line in lines:
-    blacklist.append(line.strip('\n'))
+debug('[SERVER] Loading blacklist', '')
+try:
+    wl = open('blacklist.txt', 'r')
+    lines = wl.readlines()
+    for line in lines:
+        blacklist.append(line.strip('\n'))
+    wl.close()
+except FileNotFoundError:
+    debug('[SERVER] No blacklist found', '')
 
-wl.close()
-print('[SERVER] Logging on')
+debug('[SERVER] Logging on...', '')
 client.run(DISCORD_TOKEN)

@@ -8,7 +8,6 @@ from helpers import *
 
 async def handle_blacklist(client, message, command, sudo, blacklist):
     if(not sudo):
-        await form_message(client, message, strings.NO_PERMISSIONS_MSG)
         return
 
     if(0 != len(command['args'])):
@@ -29,7 +28,6 @@ async def handle_blacklist(client, message, command, sudo, blacklist):
 
 async def handle_unblacklist(client, message, command, sudo, blacklist):
     if(not sudo):
-        await form_message(client, message, strings.NO_PERMISSIONS_MSG)
         return
 
     if(0 != len(command['args'])):

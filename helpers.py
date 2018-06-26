@@ -13,7 +13,7 @@ def parse_args(message):
     temp = []
 
     #Handle quotations
-    parts = message.split('"')
+    parts = message.replace('“','"').replace('”','"').split('"')
     for part in parts:
         if(quote):
             temp.append(part)
