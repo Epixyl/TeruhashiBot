@@ -165,11 +165,16 @@ async def handle_custom_add(client, message, command, sudo, command_list):
     lines = wr.readlines()
     wr.close()
     wl = open(constants.COMMAND_LIST_FILE, 'w')
+    written = False
     for line in lines:
         if (message.channel.id + ':' + custom_command) in line:
-            wl.write(message.channel.id + ':' + custom_command + ':' + custom_reply + '\n')
+            wl.write(message.channel.id + ':' + custom_command + ':' + custom_reply.replace("\n", "\\n") + '\n')
+            written = True
         else:
             wl.write(line)
+    if not written: 
+        wl.write(message.channel.id + ':' + custom_command + ':' + custom_reply.replace("\n", "\\n") + '\n')
+
     wl.close()
     command_lock.release()
 
@@ -180,3 +185,25 @@ async def handle_custom_add(client, message, command, sudo, command_list):
         await form_message(client, message, strings.ADD_CUSTOM_COMMAND_MSG % (custom_command, custom_reply))
 
     return
+
+async def handle_list(client, message, command, sudo, command_list):
+    if(len(command['args']) != 0):
+        await form_message(client, message, strings.PARAM_MSG)
+        return
+    
+    output = ""
+    commands = []
+    for c in command_list:
+        if c[0] == message.channel.id:
+            commands.append(c[1])
+    commands.sort()
+    for c in commands:
+        output += c + ", "
+    if len(output) > 0:
+        output = output[:-2]
+    await form_private_message(client, message, strings.LIST_CUSTOM_COMMAND_MSG % output)
+    permissions = await delete_message(client, message)
+    if not permissions:
+        await form_message(client, message, strings.LIST_CUSTOM_COMMAND_MSG % output)
+    return
+    

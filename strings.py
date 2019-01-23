@@ -23,6 +23,7 @@ FAREWELL_MSG = 'Bye, {0.author.mention}!'
 SAIKI_MSG = ':flushed:'
 PM_MSG = '{0.author.mention}, I PM\'d you the information you requested.'
 ADD_CUSTOM_COMMAND_MSG = '{0.author.mention}, I added your command: %s -> %s.\n(Note: commands may be removed or replaced by other users without notice.)'
+LIST_CUSTOM_COMMAND_MSG = '{0.author.mention}, Here are all the valid commands for your current channel: \n%s'
 MESSAGE_DEBUG = '[CMD %s] SRVR=%s, USER=%s: '
 REPLY_DEBUG = '[CMD %s] %s: '
 TO_CHANNEL_DEBUG = '[CMD %s] SRVR=%s: '
@@ -33,8 +34,9 @@ WHOIS_RESULT_MSG = '**Name:** %s\n**Description:** %s\n'
 TOENGLISH_RESULT_MSG = '**Detected Language:** %s\n**Pronounciation:** %s\n**Translation:** %s\n'
 DELTA_FORMAT = '%i days, %i hours, %i minutes, and %i seconds'
 HELP_MSG = """
+Here's some commands you can use:
 **!examplecmd [Req. Arg] (Opt. Arg):** Description
-**!anime [query]:** Find details about an anime. 
+**!anime [query]:** Find details about an anime.
 **!manga [query]:** Find details about a manga.
 **!whois [query]:** Find details about a character in an anime or manga.
 **!translate [query]:** Translate some text to English.
@@ -42,7 +44,8 @@ HELP_MSG = """
 **!should [i, we, he, she, etc...action?]:** Make a yes/no decision.
 **!is [query]:** Make a yes/no decision.
 **!choose [opt1] [opt2] (...)** Make a choice.
-**!add [command] [reply]** Create a custom command.
+**!add [command] [reply]** Create a custom command (Limited to the current channel).
+**!list** List the custom commands.
 """
 ADMIN_HELP_MSG = """
 Since you're an administrator for the channel, here's more commands you can use!
@@ -58,6 +61,5 @@ ABOUT_MSG = """
 I've been online for %s.
 
 I'm written in Python 3 and maintained by @Epi#8979.
-Packages used: discord, pymoe.
-Version 1.0
+Version 1.1
 """

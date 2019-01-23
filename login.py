@@ -47,6 +47,9 @@ async def on_message(message):
 
     command = parse_args(message.content)
 
+    if 'https://myanimelist' in message.content.lower():
+        await client.add_reaction(message, constants.EMOJI_SAD_FACE)
+
     #Ignore statements that are not commands.
     if(not command['iscommand']):
         return
@@ -177,6 +180,10 @@ async def on_message(message):
         await user.handle_custom_add(client, message, command, sudo, command_list)
         return
 
+    if command['command'].lower() in ['list']:
+        await user.handle_list(client, message, command, sudo, command_list)
+        return
+
     if (message.channel.id, command['command'].lower()) in command_list:
         await user.handle_custom(client, message, command, sudo, command_list)
         return
@@ -207,7 +214,7 @@ try:
     for line in lines:
         server_name = line.split(':')[0]
         custom_command = line.split(':')[1]
-        custom_reply = ' '.join(line.split(':')[2:])
+        custom_reply = ':'.join(line.split(':')[2:]).replace("\\n", "\n")
         command_list[(server_name, custom_command)] = custom_reply
     wl.close()
 except FileNotFoundError:
