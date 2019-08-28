@@ -221,5 +221,6 @@ except FileNotFoundError:
     debug('[SERVER] No custom commands found', '')
 
 debug('[SERVER] Logging on...', '')
-starttime = datetime.datetime.now()
-client.run(DISCORD_TOKEN)
+while True:
+    starttime = datetime.datetime.now()
+    client.run(DISCORD_TOKEN)
