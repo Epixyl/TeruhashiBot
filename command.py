@@ -157,6 +157,7 @@ async def handle_custom_add(client, message, command, sudo, command_list):
 
     command_lock.acquire()
     if custom_command in constants.OFFICIAL_COMMANDS:
+        command_lock.release()
         await form_message(client, message, strings.DUPLICATE_COMMAND_MSG)
         return
 
